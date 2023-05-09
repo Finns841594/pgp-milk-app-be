@@ -28,7 +28,6 @@ app.get('/api/puppies/:id', (req: Request, res: Response) => {
 app.post('/api/puppies', (req: Request, res: Response) => {
   const puppy = req.body;
   db.push(puppy);
-  console.log('updated database: ', db)
   return res.status(201).json(puppy);
 });
 
@@ -52,5 +51,18 @@ app.put('/api/puppies/:id', (req: Request, res: Response) => {
     return res.status(200).json(puppy);
   }
 })
+
+app.delete('/api/puppies/:id', (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const puppy = db.find((puppy) => puppy.id === id);
+  if (!puppy) {
+    return res.status(404).json({ error: 'Puppy not found' });
+  } else {
+    const index = db.indexOf(puppy);
+    db.splice(index, 1);
+    return res.status(204).json({ message: 'Puppy deleted' });
+  }
+});
+
 
 export default app;

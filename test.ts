@@ -50,7 +50,6 @@ describe('/api/puppies post method', () => {
       })
       .set('Accept', 'application/json');
     expect(res.statusCode).toEqual(201);
-    console.log('⭐️resbody: ', res.body)
     expect(res.body.id).toEqual(5);
   })
 });
@@ -66,5 +65,14 @@ describe('/api/puppies/:id put method', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body.id).toEqual(4);
     expect(res.body.name).toEqual('Max');
+  });
+})
+
+describe('/api/puppies/:id delete method', () => {
+  it('it should delete a puppy', async () => {
+    const res = await request(app).delete('/api/puppies/4');
+    expect(res.statusCode).toEqual(204);
+    const res2 = await request(app).get('/api/puppies');
+    expect(res2.body.length).toEqual(4); // DB starts with 4 puppies, previous test added one, this test deleted one
   });
 })

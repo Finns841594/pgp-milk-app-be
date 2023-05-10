@@ -1,11 +1,14 @@
 import express from 'express';
 import { Request, Response, Application } from 'express';
 import {db} from './database';
+import cors from 'cors';
 
 const app: Application = express();
 
 // REMEMBER to add body-parser middleware!!!!!!!!!!!!!!
 app.use(express.json());
+// REMEMBER to add cors middleware!!!!!!!!!!!!!!
+app.use(cors());
 
 app.get('/api/test', (_req: Request, res: Response) => {
   return res.status(200).json({ test: 'is working as it should' });

@@ -2,6 +2,7 @@ import express from 'express';
 import { Request, Response, Application } from 'express';
 import {db} from './database';
 import cors from 'cors';
+import { idIncrementer } from './tools';
 
 const app: Application = express();
 
@@ -30,6 +31,8 @@ app.get('/api/puppies/:id', (req: Request, res: Response) => {
 
 app.post('/api/puppies', (req: Request, res: Response) => {
   const puppy = req.body;
+  const newId = idIncrementer(db);
+  puppy.id = newId;
   db.push(puppy);
   return res.status(201).json(puppy);
 });

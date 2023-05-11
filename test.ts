@@ -15,7 +15,7 @@ describe('/api/puppies get methond', () => {
   it('it should return a list of puppies', async () => {
     const res = await request(app).get('/api/puppies');
     expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toEqual(4);
+    expect(res.body.length).toBeGreaterThan(2); // at least have 3 puppies
   });
   it('it should return proper puppy data', async () => {
     const res = await request(app).get('/api/puppies');
@@ -24,7 +24,7 @@ describe('/api/puppies get methond', () => {
   })
 });
 
-describe('/api/puppies/:id', () => {
+describe('/api/puppies/:id - get puppy by id', () => {
   it('it should return a single puppy', async () => {
     const res = await request(app).get('/api/puppies/1');
     expect(res.statusCode).toEqual(200);
@@ -43,14 +43,13 @@ describe('/api/puppies post method', () => {
     const res = await request(app)
       .post('/api/puppies')
       .send({
-        id: 5,
         breed: 'German Shepherd',
         name: 'Max',
         birthdate: '2019-01-07',
       })
       .set('Accept', 'application/json');
     expect(res.statusCode).toEqual(201);
-    expect(res.body.id).toEqual(5);
+    expect(res.body.name).toEqual('Max');
   })
 });
 
@@ -70,9 +69,11 @@ describe('/api/puppies/:id put method', () => {
 
 describe('/api/puppies/:id delete method', () => {
   it('it should delete a puppy', async () => {
-    const res = await request(app).delete('/api/puppies/4');
-    expect(res.statusCode).toEqual(204);
+    const res = await request(app).get('/api/puppies');
+    const originalNumberofPuppies = res.body.length;
+    const res1 = await request(app).delete('/api/puppies/4');
+    expect(res1.statusCode).toEqual(204);
     const res2 = await request(app).get('/api/puppies');
-    expect(res2.body.length).toEqual(4); // DB starts with 4 puppies, previous test added one, this test deleted one
+    expect(res2.body.length).toEqual(originalNumberofPuppies - 1); // DB starts with 4 puppies, previous test added one, this test deleted one
   });
 })

@@ -59,6 +59,8 @@ describe('/api/puppies/:id put method', () => {
       .put('/api/puppies/4')
       .send({
         name: 'Max',
+        breed: 'German Shepherd',
+        birthdate: '2019-01-07',
       })
       .set('Accept', 'application/json');
     expect(res.statusCode).toEqual(200);

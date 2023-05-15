@@ -43,19 +43,15 @@ app.put('/api/puppies/:id', (req: Request, res: Response) => {
   const puppy = db.find((puppy) => puppy.id === id);
   if (!puppy) {
     return res.status(404).json({ error: 'Puppy not found' });
+  } else if (!newPuppyInfo.name || !newPuppyInfo.breed || !newPuppyInfo.birthdate ) {
+    return res.status(400).json({ error: 'Bad request' });
   } else {
     // Its COOL that you can change the value of a key in an object in an array like this !!!
-    if (newPuppyInfo.breed) {
       puppy.breed = newPuppyInfo.breed;
-    } else if (newPuppyInfo.name) {
       puppy.name = newPuppyInfo.name;
-    } else if (newPuppyInfo.birthdate) {
       puppy.birthdate = newPuppyInfo.birthdate;
-    } else {
-      return res.status(400).json({ error: 'Bad request' });
+      return res.status(200).json(puppy);
     }
-    return res.status(200).json(puppy);
-  }
 })
 
 app.delete('/api/puppies/:id', (req: Request, res: Response) => {

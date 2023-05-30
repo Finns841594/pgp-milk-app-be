@@ -1,17 +1,20 @@
-import { Puppy } from "./types";
+import { Milk } from "types";
 
-export const idIncrementer = (db:Puppy[]) => {
-    //find the highest id in the db
-    const highestId = db.reduce((acc:number, curr:Puppy) => {
-        if (curr.id > acc) {
-            return curr.id;
-        }
-        else {
-            return acc;
-        }
+export const standardReturn = (datas: Milk[]) => {
+    return {
+        count: datas.length,
+        results: datas
     }
-    , 0);
-    //increment the highest id by 1
-    const newId = highestId + 1;
-    return newId;
-};
+}
+
+export const standardResponseWithPagination = (datas: Milk[], page=1) => {
+    const responseData = datas.slice((page - 1) * 9 , (page - 1) * 9 + 9);
+    // Should I add a check to see if page is out of bounds?
+    // Should I return current page and total pages?
+    return {
+        count: datas.length,
+        page: page,
+        results: responseData
+    }
+}
+

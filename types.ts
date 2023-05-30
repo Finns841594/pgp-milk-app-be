@@ -1,6 +1,6 @@
-export type Puppy =  {
-  id: number;
-  breed: string;
+export type Milk =  {
   name: string;
-  birthdate: string;
+  type: string;
+  storage: number;
+  id: string;
 }

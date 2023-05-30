@@ -2,69 +2,50 @@ import express from 'express';
 import { Request, Response, Application } from 'express';
 import {db} from './database';
 import cors from 'cors';
-import { idIncrementer } from './tools';
+import { standardResponseWithPagination } from './tools';
 
 const app: Application = express();
 
-// REMEMBER to add body-parser middleware!!!!!!!!!!!!!!
 app.use(express.json());
-// REMEMBER to add cors middleware!!!!!!!!!!!!!!
 app.use(cors());
 
 app.get('/api/test', (_req: Request, res: Response) => {
   return res.status(200).json({ test: 'is working as it should' });
 });
 
-app.get('/api/puppies', (_req: Request, res: Response) => {
-  return res.status(200).json(db);
+// Decided to always return paginated results
+// Get all paginated milks
+app.get('/api/milks', (req: Request, res: Response) => {
+  const page = Number(req.query.page) || 1;
+  return res.status(200).json(standardResponseWithPagination(db.results, page));
 });
 
-app.get('/api/puppies/:id', (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const puppy = db.find((puppy) => puppy.id === id);
-  if (!puppy) {
-    return res.status(404).json({ error: 'Puppy not found' });
-  } else {
-    return res.status(200).json(puppy);
-  }
+// Search milks
+app.get('/api/milks/search', (req: Request, res: Response) => {
+  const search = req.query.q as string;
+  const page = Number(req.query.page) || 1;
+
+  const filteredMilks = db.results.filter((milk) => milk.name.includes(search));
+
+  return res.status(200).json(standardResponseWithPagination(filteredMilks,page));
 });
 
-app.post('/api/puppies', (req: Request, res: Response) => {
-  const puppy = req.body;
-  const newId = idIncrementer(db);
-  puppy.id = newId;
-  db.push(puppy);
-  return res.status(201).json(puppy);
-});
-
-app.put('/api/puppies/:id', (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const newPuppyInfo = req.body;
-  const puppy = db.find((puppy) => puppy.id === id);
-  if (!puppy) {
-    return res.status(404).json({ error: 'Puppy not found' });
-  } else if (!newPuppyInfo.name || !newPuppyInfo.breed || !newPuppyInfo.birthdate ) {
-    return res.status(400).json({ error: 'Bad request' });
-  } else {
-    // Its COOL that you can change the value of a key in an object in an array like this !!!
-      puppy.breed = newPuppyInfo.breed;
-      puppy.name = newPuppyInfo.name;
-      puppy.birthdate = newPuppyInfo.birthdate;
-      return res.status(200).json(puppy);
-    }
+// Get all milk types, return string[]
+app.get('/api/milks/types/', (_req: Request, res: Response) => {
+  const milkTypes = db.results.map((milk) => milk.type);
+  const uniqueMilkTypes = [...new Set(milkTypes)];
+  return res.status(200).json(uniqueMilkTypes);
 })
 
-app.delete('/api/puppies/:id', (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const puppy = db.find((puppy) => puppy.id === id);
-  if (!puppy) {
-    return res.status(404).json({ error: 'Puppy not found' });
-  } else {
-    const index = db.indexOf(puppy);
-    db.splice(index, 1);
-    return res.status(204).json({ message: 'Puppy deleted' });
-  }
-});
+// Get all milks of a type
+// params: type must be strictly equal to a type in the database, CASE SENSITIVE
+app.get('/api/milks/types/:type', (req: Request, res: Response) => {
+  const type = req.params.type;
+  const page = Number(req.query.page) || 1;
 
+  const filteredMilks = db.results.filter((milk) => milk.type === type);
+
+  return res.status(200).json(standardResponseWithPagination(filteredMilks,page));
+})
 
 export default app;

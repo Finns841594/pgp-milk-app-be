@@ -58,3 +58,14 @@ describe('/api/milks/types/:type get method', () => {
   }
   )
 })
+
+// return milk by id
+describe('/api/milks/id/:id get method', () => {
+  it('it should return a milk by id', async () => {
+    const res = await request(app).get('/api/milks/id/301d5dcf-a2a8-4a34-b26b-efcaa103963c'); // First milk in db
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.type).toEqual('Cashew milk');
+    expect(res.body.id).toEqual('301d5dcf-a2a8-4a34-b26b-efcaa103963c');
+  }
+  )
+})

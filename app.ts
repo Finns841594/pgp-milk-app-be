@@ -52,7 +52,6 @@ app.get('/api/milks/types/:type', (req: Request, res: Response) => {
 })
 
 // Get milk by id
-// No test for this yet
 app.get('/api/milks/id/:id', (req: Request, res: Response) => {
   const id = req.params.id;
   const milk = db.results.find((milk) => milk.id === id);

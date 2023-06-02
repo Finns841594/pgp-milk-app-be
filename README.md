@@ -1,33 +1,28 @@
-# &lt;/salt&gt;
+## Backend for my [Milk App](https://github.com/Finns841594/pgp-five-milk-app)
 
-## Puppies API with Typescript
+### Usage
 
-In this exercise you will create a puppy API with Express and Typescript. The goal is to get familiar with Typescript and how to use it in Node.js. Again, if you are in the DNFS or JFS stack, switch this API to your respective language and skip TypeScript. (then, just delete the rest of the files and just keep this README!)
+#### Prerequisites
 
-### The task
+Just run `npm install` and then `npm start` to start the server. You can also run `npm run dev` to start the server in development mode.
 
-Your task is to create a RESTful API with the following endpoints:
+#### Endpoints
 
-- GET: `api/puppies`. This should return a list of all puppies in JSON-format.
-- GET: `api/puppies/:id`. This should return one puppy in JSON-format.
-- POST: `api/puppies`. This should create and return the newly added puppy.
-- PUT: `api/puppies/:id`. This should put one puppy down (jk, just update the specific puppy).
-- DELETE: `api/puppies/:id`. This should actually put one puppy down aka delete it.
+This is backend for my [Milk App](https://github.com/Finns841594/pgp-five-milk-app) project as a test. It is a simple API with the following endpoints:
 
-The database for this task can just be a local array or a real database, it is up to you.
+- `GET /api/milks` - returns all milk products
+- `GET /api/milks/id/:id` - returns a single milk product
+- `GET /api/milks/types` - returns all milk types
+- `GET /api/milks/types/:type` - returns all milk in one type
+- `GET /api/milks/search?q=example query` - returns all milk with keyword in name
 
-Each `puppy` should have the following attributes: 
-    - id
-    - breed
-    - name
-    - birth date
+you can always add `page={number}` to get the specific page of results.
 
-### Testing
+#### Database
 
-We have supplied a starter tests to get going, please add more as TDD rules!
+It is using a mock database which store in file `database.ts`. Restart the server will restore the data. So no `POST` endpoints for this project because it is not necessary.
 
-### TypeScript
+#### Testing
 
-Remember that there are built in types in Express that you should use, e.g. in app.ts you can see that `Request`, `Response` and `Application` are types supplied from Express.
+Run `npm test` to run the tests. It is using `jest` and `supertest` to test the endpoints.
 
-Play around with implementing e.g. Class, interface, Enums, generics for things not supplied from Express and other frameworks/libraries.
